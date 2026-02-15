@@ -48,10 +48,10 @@ async function main() {
         for (const host in state.discoveredPDUs) {
             pollPDUStatus(host);
         }
-    }, 10000); // Poll every 10 seconds
+    }, 60_000);
 
     // 5. Start scheduler
-    setInterval(runSchedules, 10000);
+    setInterval(runSchedules, 10_000);
 }
 
 main().catch(err => console.error('Main error:', err));
