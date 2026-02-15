@@ -97,6 +97,16 @@ Once started, the web server is accessible at:
 
 The interface features a "Power Control" title which acts as a fuzzy search bar. Use it to filter by group name, outlet name, or PDU location.
 
+## Install pigpio
+
+```
+wget https://github.com/joan2937/pigpio/archive/master.zip
+unzip master.zip
+cd pigpio-master
+make
+sudo make install
+```
+
 ## License
 
 MIT
