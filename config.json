@@ -1,0 +1,31 @@
+{
+  "groups": [
+    { "name": "Atrium", "onCommand": "i2cset -y 1 0x10 0x01 0xFF", "offCommand": "i2cset -y 1 0x10 0x01 0x00" },
+    { "name": "Auditorium", "onCommand": "i2cset -y 1 0x10 0x03 0xFF", "offCommand": "i2cset -y 1 0x10 0x03 0x00" },
+    { "name": "Camera", "onCommand": "i2cset -y 1 0x10 0x01 0xFF", "offCommand": "i2cset -y 1 0x10 0x01 0x00" },
+    { "name": "Hazer", "onCommand": "i2cset -y 1 0x11 0x01 0xFF", "offCommand": "i2cset -y 1 0x11 0x01 0x00" },
+    { "name": "Lights", "onCommand": "i2cset -y 1 0x10 0x04 0xFF", "offCommand": "i2cset -y 1 0x10 0x04 0x00" }
+  ],
+  "scanSubnets": [
+    "10.1.32"
+  ],
+  "apcPDUs": [
+    "10.1.32.105",
+    "10.1.32.106",
+    "10.1.32.107"
+  ],
+  "rpi-gpio": [
+    { "color": "white" ,"pin": 24, "mode": "switch", "group": "Hazer" },
+    { "color": "red", "pin": 17, "mode": "switch", "group": "Lights" },
+    { "color": "blue", "pin": 23, "mode": "switch", "group": "Cameras" },
+    { "color": "green", "pin": 22, "mode": "switch", "group": "Atrium" },
+    { "color": "orange", "pin": 27, "mode": "switch", "group": "Auditorium" },
+    { "color": "yellow", "pin": 14, "mode": "output", "name": "Sound System Trigger", "onCommand": "i2cset -y 1 0x11 0x02 0xFF", "offCommand": "i2cset -y 1 0x11 0x02 0x00", "autoOffAfter": 1000 }
+  ],
+  "schedules": [
+    {
+      "time": "00:00",
+      "action": "off"
+    }
+  ]
+}

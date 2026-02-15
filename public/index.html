@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APC PDU Controller</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title-wrapper">
+                <input type="text" id="filter-input" placeholder="Power Control" autocomplete="off">
+                <button id="clear-filter" class="hidden">&times;</button>
+            </div>
+        </div>
+        <div id="groups">
+            <p style="text-align: center; color: var(--text-muted);">Connecting...</p>
+        </div>
+    </div>
+
+    <dialog id="info-dialog">
+        <div class="dialog-header">
+            <div class="dialog-title">Outlet Details</div>
+            <button class="close-dialog" onclick="document.getElementById('info-dialog').close()">×</button>
+        </div>
+        <div id="info-content" class="info-grid">
+            <!-- Content will be injected here -->
+        </div>
+    </dialog>
+
+    <script src="script.js"></script>
+</body>
+</html>

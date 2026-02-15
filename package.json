@@ -1,0 +1,19 @@
+{
+  "name": "apc-gpio-automator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "private": true,
+  "dependencies": {
+    "express": "^5.2.1",
+    "snmp-native": "^1.2.0",
+    "socket.io": "^4.8.3"
+  },
+  "optionalDependencies": {
+    "rpi-gpio": "^2.1.7"
+  }
+}
