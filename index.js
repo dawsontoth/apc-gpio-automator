@@ -3,8 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { state } from './lib/core/state.js';
 import { initGPIO } from './lib/gpio/initGPIO.js';
-import { scanSubnet } from './lib/pdu/scanSubnet.js';
-import { discoverPDU } from './lib/pdu/discoverPDU.js';
+import { discoverDevices } from './lib/pdu/discoverDevices.js';
 import { pollPDUStatus } from './lib/pdu/pollPDUStatus.js';
 import { triggerGroup } from './lib/core/triggerGroup.js';
 import { toggleGroup } from './lib/core/toggleGroup.js';
@@ -20,37 +19,18 @@ state.config = config;
 async function main() {
     console.log('Starting APC GPIO Automator...');
     
-    // 1. Start web server early
     startWebServer();
-
-    // 2. Initialize GPIO
     initGPIO(triggerGroup, toggleGroup);
+    await discoverDevices();
 
-    const allHosts = new Set(config.apcPDUs || []);
-
-    // Perform subnet scanning if configured
-    if (config.scanSubnets) {
-        for (const subnet of config.scanSubnets) {
-            const discoveredHosts = await scanSubnet(subnet);
-            discoveredHosts.forEach(h => allHosts.add(h));
-        }
-    }
-
-    // 3. Load multiple APC PDUs
-    for (const host of allHosts) {
-        if (!state.discoveredPDUs[host]) {
-            await discoverPDU(host);
-        }
-    }
-
-    // 4. Start status polling
     setInterval(() => {
         for (const host in state.discoveredPDUs) {
             pollPDUStatus(host);
         }
     }, 60_000);
 
-    // 5. Start scheduler
+    setInterval(discoverDevices, 5 * 60_000);
+
     setInterval(runSchedules, 10_000);
 }
 

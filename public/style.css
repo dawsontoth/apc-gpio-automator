@@ -29,25 +29,26 @@ body {
     width: 100%;
     margin-bottom: 20px;
     display: flex;
-    justify-content: center;
 }
 
 .title-wrapper {
-    position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
-    max-width: 600px;
+    gap: 6px;
 }
 
 #filter-input {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
     background: transparent;
     border: none;
     border-bottom: 1px solid transparent;
     color: var(--text-color);
     font-size: 2rem;
     font-weight: 300;
-    text-align: center;
-    padding: 10px;
+    text-align: left;
+    padding: 10px 0;
     outline: none;
     transition: border-color 0.2s;
 }
@@ -62,10 +63,7 @@ body {
 }
 
 #clear-filter {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
+    flex-shrink: 0;
     background: none;
     border: none;
     color: var(--text-muted);
@@ -76,9 +74,39 @@ body {
     z-index: 10;
 }
 
+#discover-btn {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: color 0.2s;
+}
+
+#discover-btn:hover {
+    color: var(--text-color);
+}
+
+#discover-btn.spinning {
+    color: var(--primary);
+}
+
+#discover-btn.spinning svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 #clear-filter.hidden {
-    visibility: hidden;
-    opacity: 0;
+    display: none;
 }
 
 #clear-filter:hover {
@@ -174,6 +202,7 @@ body {
 .outlet-location {
     font-size: 0.75rem;
     color: var(--text-muted);
+    gap: 6px;
 }
 
 .outlet-controls {
@@ -370,6 +399,12 @@ dialog::backdrop {
 }
 
 @media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+    #filter-input {
+        font-size: 1.5rem;
+    }
     .outlet-item {
         padding: 8px 12px;
     }

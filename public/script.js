@@ -4,6 +4,7 @@ const infoDialog = document.getElementById('info-dialog');
 const infoContent = document.getElementById('info-content');
 const filterInput = document.getElementById('filter-input');
 const clearFilterBtn = document.getElementById('clear-filter');
+const discoverBtn = document.getElementById('discover-btn');
 
 let lastState = null;
 let expandedGroups = new Set();
@@ -12,6 +13,7 @@ let filterText = '';
 
 socket.on('state', (state) => {
     lastState = state;
+    discoverBtn.classList.remove('spinning');
     render(state);
 });
 
@@ -26,6 +28,14 @@ clearFilterBtn.addEventListener('click', () => {
     filterText = '';
     clearFilterBtn.classList.add('hidden');
     render(lastState);
+});
+
+discoverBtn.addEventListener('click', () => {
+    discoverBtn.classList.add('spinning');
+    socket.emit('discoverDevices');
+    // The 'state' update will eventually come back and we can stop spinning then,
+    // but for now let's just let it spin for a bit if we don't have a specific 'discoveryComplete' event.
+    // Actually, when 'state' is received, we can stop spinning.
 });
 
 function toggleCollapse(groupName) {
@@ -125,9 +135,11 @@ function render(state) {
                 <div class="outlet-info">
                     <div class="outlet-label">
                         <span class="outlet-name">${outlet.name}</span>
-                        ${!outlet.host.startsWith('GPIO') 
-                            ? `<a href="http://${outlet.host}" target="_blank" class="outlet-location pdu-link">${outlet.location}</a>` 
-                            : `<span class="outlet-location">${outlet.location}</span>`}
+                        <span class="outlet-location">
+                            ${!outlet.host.startsWith('GPIO')
+                              ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.location}</a>`
+                              : outlet.location}
+                        </span>
                     </div>
                 </div>
                 <div class="outlet-controls">
