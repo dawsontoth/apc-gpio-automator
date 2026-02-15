@@ -47,7 +47,7 @@ body {
     font-size: 2rem;
     font-weight: 300;
     text-align: center;
-    padding: 10px 40px;
+    padding: 10px;
     outline: none;
     transition: border-color 0.2s;
 }
