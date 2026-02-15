@@ -64,6 +64,7 @@ The `config.json` file is the central point for setting up your environment.
 - `rpi-gpio`: (Array of Objects) Configuration for Raspberry Pi GPIO pins via `pigpiod`.
   - `pin`: (Number) GPIO pin number (BCM).
   - `host`: (String, Optional) Hostname of the Raspberry Pi running `pigpiod`. Defaults to `127.0.0.1`.
+  - `port`: (Number, Optional) Port number for `pigpiod`. Defaults to `8888`.
   - `mode`: (String) `switch`, `momentary`, or `output`.
   - `group`: (String, for `switch`/`momentary`) The group name this pin controls.
   - `name`: (String, for `output`) Display name for the pin in the web interface.
