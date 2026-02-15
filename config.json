@@ -4,13 +4,18 @@
       "ledColor": "idk",
       "name": "Atrium",
       "onCommand": "i2cset -y 1 0x10 0x01 0xFF",
-      "offCommand": "i2cset -y 1 0x10 0x01 0x00"
+      "offCommand": "i2cset -y 1 0x10 0x01 0x00",
+      "dependsOn": ["Video Infra"]
     },
     {
       "ledColor": "idk",
       "name": "Auditorium",
       "onCommand": "i2cset -y 1 0x10 0x03 0xFF",
-      "offCommand": "i2cset -y 1 0x10 0x03 0x00"
+      "offCommand": "i2cset -y 1 0x10 0x03 0x00",
+      "dependsOn": ["Video Infra"]
+    },
+    {
+      "name": "Video Infra"
     },
     {
       "ledColor": "blue",
