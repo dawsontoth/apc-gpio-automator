@@ -5,12 +5,18 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "daemon": "pm2 start index.js --name apc-gpio-automator",
+    "daemon:stop": "pm2 stop apc-gpio-automator",
+    "daemon:restart": "pm2 restart apc-gpio-automator",
+    "daemon:status": "pm2 status",
+    "daemon:logs": "pm2 logs apc-gpio-automator"
   },
   "private": true,
   "dependencies": {
     "express": "^5.2.1",
     "pigpio-client": "^1.5.2",
+    "pm2": "^6.0.14",
     "snmp-native": "^1.2.0",
     "socket.io": "^4.8.3"
   }

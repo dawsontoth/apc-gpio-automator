@@ -48,6 +48,29 @@ A comprehensive Node.js application for controlling APC PDUs and Raspberry Pi GP
    npm start
    ```
 
+### Running as a Daemon (PM2)
+
+To keep the application running in the background and ensure it restarts on crash or reboot, you can use the built-in daemon scripts powered by [PM2](https://pm2.keymetrics.io/):
+
+1. **Start the daemon**:
+   ```bash
+   npm run daemon
+   ```
+
+2. **(Optional) Configure to start on boot**:
+   To ensure the application starts automatically when the Raspberry Pi reboots:
+   ```bash
+   npx pm2 startup
+   # Follow the instructions provided by the command output, then run:
+   npx pm2 save
+   ```
+
+3. **Manage the daemon**:
+   - **Check Status**: `npm run daemon:status`
+   - **View Logs**: `npm run daemon:logs`
+   - **Restart**: `npm run daemon:restart`
+   - **Stop**: `npm run daemon:stop`
+
 ## Configuration (`config.json`)
 
 The `config.json` file is the central point for setting up your environment.
@@ -61,7 +84,7 @@ The `config.json` file is the central point for setting up your environment.
   - `autoOffAfter`: (Number, Optional) Delay in milliseconds after which the group will automatically turn OFF.
 - `scanSubnets`: (Array of Strings) Subnets to scan for APC PDUs (e.g., `["10.1.32"]`).
 - `apcPDUs`: (Array of Strings) Specific IP addresses of APC PDUs to include regardless of scanning.
-- `rpi-gpio`: (Array of Objects) Configuration for Raspberry Pi GPIO pins via `pigpiod`.
+- `gpio`: (Array of Objects) Configuration for Raspberry Pi GPIO pins via `pigpiod`.
   - `pin`: (Number) GPIO pin number (BCM).
   - `host`: (String, Optional) Hostname of the Raspberry Pi running `pigpiod`. Defaults to `127.0.0.1`.
   - `port`: (Number, Optional) Port number for `pigpiod`. Defaults to `8888`.
