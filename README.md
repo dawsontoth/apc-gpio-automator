@@ -95,6 +95,7 @@ The `config.json` file is the central point for setting up your environment.
   - `onCommand`/`offCommand`: (String, Optional) Commands to run when the pin state changes.
   - `autoOffAfter`: (Number, Optional) For outputs, time in ms to automatically turn back off.
   - `minTime`: (Number, for `momentary`) Minimum pulse duration in ms.
+  - **Debounce**: `switch` mode pins are automatically debounced by 100ms.
 - `schedules`: (Array of Objects) Automated tasks.
   - `time`: (String) Time in HH:mm format.
   - `days`: (Array of Strings, Optional) Specific days to run (e.g., `["Sun", "Wed"]`).

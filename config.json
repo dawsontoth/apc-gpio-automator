@@ -1,26 +1,31 @@
 {
   "groups": [
     {
+      "ledColor": "idk",
       "name": "Atrium",
       "onCommand": "i2cset -y 1 0x10 0x01 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x01 0x00"
     },
     {
+      "ledColor": "idk",
       "name": "Auditorium",
       "onCommand": "i2cset -y 1 0x10 0x03 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x03 0x00"
     },
     {
+      "ledColor": "blue",
       "name": "Camera",
       "onCommand": "i2cset -y 1 0x10 0x01 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x01 0x00"
     },
     {
+      "ledColor": "white",
       "name": "Hazer",
       "onCommand": "i2cset -y 1 0x11 0x01 0xFF",
       "offCommand": "i2cset -y 1 0x11 0x01 0x00"
     },
     {
+      "ledColor": "idk",
       "name": "Lights",
       "onCommand": "i2cset -y 1 0x10 0x04 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x04 0x00"
@@ -40,6 +45,7 @@
       "pin": 18,
       "bcmPin": 24,
       "mode": "switch",
+      "pull": "down",
       "group": "Hazer"
     },
     {
@@ -47,6 +53,7 @@
       "pin": 11,
       "bcmPin": 17,
       "mode": "switch",
+      "pull": "down",
       "group": "Lights"
     },
     {
@@ -54,6 +61,7 @@
       "pin": 16,
       "bcmPin": 23,
       "mode": "switch",
+      "pull": "down",
       "group": "Cameras"
     },
     {
@@ -61,6 +69,7 @@
       "pin": 15,
       "bcmPin": 22,
       "mode": "switch",
+      "pull": "down",
       "group": "Atrium"
     },
     {
@@ -68,6 +77,7 @@
       "pin": 13,
       "bcmPin": 27,
       "mode": "switch",
+      "pull": "down",
       "group": "Auditorium"
     },
     {
