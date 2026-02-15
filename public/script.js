@@ -125,7 +125,7 @@ function render(state) {
                 <div class="outlet-info">
                     <div class="outlet-label">
                         <span class="outlet-name">${outlet.name}</span>
-                        ${outlet.host !== 'GPIO' 
+                        ${!outlet.host.startsWith('GPIO') 
                             ? `<a href="http://${outlet.host}" target="_blank" class="outlet-location pdu-link">${outlet.location}</a>` 
                             : `<span class="outlet-location">${outlet.location}</span>`}
                     </div>
@@ -211,7 +211,7 @@ function showInfo(host, index) {
         <div class="info-value">${outlet.pduName}</div>
         
         <div class="info-label">Host</div>
-        <div class="info-value"><a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.host}</a></div>
+        <div class="info-value">${!outlet.host.startsWith('GPIO') ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.host}</a>` : outlet.host}</div>
         
         <div class="info-label">Index</div>
         <div class="info-value">${outlet.index}</div>

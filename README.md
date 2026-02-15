@@ -5,10 +5,11 @@ A comprehensive Node.js application for controlling APC PDUs and Raspberry Pi GP
 ## Features
 
 - **Automated PDU Discovery**: Automatically scans specified subnets to find and configure APC PDUs via SNMP.
-- **Advanced GPIO Support**:
+- **Advanced GPIO Support (pigpio)**:
+  - **Network-Capable**: Can control GPIOs on multiple Raspberry Pis via `pigpiod`.
   - **Switch Mode**: Toggle physical switches to turn groups on or off.
   - **Momentary Mode**: Use push-buttons to toggle group states with configurable minimum pulse time.
-  - **Output Mode**: Control local GPIO pins as virtual outlets, supporting auto-off timers (pulses) and arbitrary shell commands.
+  - **Output Mode**: Control GPIO pins as virtual outlets, supporting auto-off timers (pulses) and arbitrary shell commands.
 - **Real-time Web Interface**:
   - **Circuit Breaker UI**: Clean, responsive dark-mode interface.
   - **Real-time Updates**: Powered by Socket.io for immediate status feedback.
@@ -60,11 +61,13 @@ The `config.json` file is the central point for setting up your environment.
   - `autoOffAfter`: (Number, Optional) Delay in milliseconds after which the group will automatically turn OFF.
 - `scanSubnets`: (Array of Strings) Subnets to scan for APC PDUs (e.g., `["10.1.32"]`).
 - `apcPDUs`: (Array of Strings) Specific IP addresses of APC PDUs to include regardless of scanning.
-- `rpi-gpio`: (Array of Objects) Configuration for Raspberry Pi GPIO pins.
-  - `pin`: (Number) Physical pin number.
+- `rpi-gpio`: (Array of Objects) Configuration for Raspberry Pi GPIO pins via `pigpiod`.
+  - `pin`: (Number) GPIO pin number (BCM).
+  - `host`: (String, Optional) Hostname of the Raspberry Pi running `pigpiod`. Defaults to `127.0.0.1`.
   - `mode`: (String) `switch`, `momentary`, or `output`.
   - `group`: (String, for `switch`/`momentary`) The group name this pin controls.
   - `name`: (String, for `output`) Display name for the pin in the web interface.
+  - `pull`: (String, Optional) `up` or `down` for input modes.
   - `onCommand`/`offCommand`: (String, Optional) Commands to run when the pin state changes.
   - `autoOffAfter`: (Number, Optional) For outputs, time in ms to automatically turn back off.
   - `minTime`: (Number, for `momentary`) Minimum pulse duration in ms.
@@ -82,8 +85,8 @@ An outlet (APC or GPIO) is associated with a group if the group's name is found 
 ### SNMP Connectivity
 The application uses **SNMPv1** with the community string **"private"** to communicate with APC PDUs. It supports both newer RPDU2 (AP8xxx series) and older RPDU (AP7xxx series) models.
 
-### Distributed GPIO (Future Ready)
-The system is architected to handle both local and potentially remote GPIO states, although currently focused on local execution via `rpi-gpio`.
+### Distributed GPIO
+The system is architected to handle both local and remote GPIO states via `pigpiod`. By default, it connects to `127.0.0.1`, but can be configured to connect to any reachable Raspberry Pi running the `pigpio` daemon.
 
 ## Web Interface
 
