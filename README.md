@@ -105,6 +105,7 @@ unzip master.zip
 cd pigpio-master
 make
 sudo make install
+sudo pigpiod
 ```
 
 ## License
