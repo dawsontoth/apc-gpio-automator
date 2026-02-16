@@ -114,6 +114,44 @@ body {
     color: var(--text-color);
 }
 
+/* Special Actions */
+.special-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    justify-content: center;
+}
+
+.special-actions.hidden {
+    display: none;
+}
+
+.special-action-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.special-action-item:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.special-action-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
 .group-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);

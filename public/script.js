@@ -1,5 +1,6 @@
 const socket = io();
 const groupsDiv = document.getElementById('groups');
+const specialActionsDiv = document.getElementById('special-actions');
 const infoDialog = document.getElementById('info-dialog');
 const infoContent = document.getElementById('info-content');
 const filterInput = document.getElementById('filter-input');
@@ -50,6 +51,27 @@ function toggleCollapse(groupName) {
 function render(state) {
     if (!state) return;
     groupsDiv.innerHTML = '';
+
+    // Render Special Actions
+    if (state.specialActions && state.specialActions.length > 0) {
+        specialActionsDiv.classList.remove('hidden');
+        specialActionsDiv.innerHTML = '';
+        state.specialActions.forEach(action => {
+            const item = document.createElement('div');
+            item.className = 'special-action-item';
+            const isOn = action.state === 'on';
+            item.innerHTML = `
+                <span class="special-action-name">${action.name}</span>
+                <label class="switch">
+                    <input type="checkbox" ${isOn ? 'checked' : ''} onchange="triggerSpecialAction('${action.name}', this.checked)">
+                    <span class="slider"></span>
+                </label>
+            `;
+            specialActionsDiv.appendChild(item);
+        });
+    } else {
+        specialActionsDiv.classList.add('hidden');
+    }
     
     let groupsToRender = state.groups;
     if (filterText) {
@@ -199,6 +221,11 @@ function triggerOutlet(host, index, isChecked) {
     const action = isChecked ? 'on' : 'off';
     socket.emit('triggerOutlet', { host, index, action });
 }
+
+window.triggerSpecialAction = function(name, isChecked) {
+    const action = isChecked ? 'on' : 'off';
+    socket.emit('triggerSpecialAction', { name, action });
+};
 
 function showInfo(host, index) {
     if (!lastState) return;

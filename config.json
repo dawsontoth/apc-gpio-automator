@@ -84,12 +84,10 @@
       "mode": "switch",
       "pull": "down",
       "group": "Auditorium"
-    },
+    }
+  ],
+  "specialActions": [
     {
-      "color": "yellow",
-      "pin": 8,
-      "bcmPin": 14,
-      "mode": "output",
       "name": "Sound System Trigger",
       "onCommand": "i2cset -y 1 0x11 0x02 0xFF",
       "offCommand": "i2cset -y 1 0x11 0x02 0x00",
