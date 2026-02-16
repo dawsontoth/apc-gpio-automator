@@ -15,7 +15,7 @@
   "private": true,
   "dependencies": {
     "express": "^5.2.1",
-    "pigpio-client": "^1.5.2",
+    "onoff": "^6.0.3",
     "pm2": "^6.0.14",
     "snmp-native": "^1.2.0",
     "socket.io": "^4.8.3"
