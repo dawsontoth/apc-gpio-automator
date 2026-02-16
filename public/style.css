@@ -74,7 +74,7 @@ body {
     z-index: 10;
 }
 
-#discover-btn {
+#discover-btn, #config-link {
     flex-shrink: 0;
     background: none;
     border: none;
@@ -86,9 +86,10 @@ body {
     justify-content: center;
     z-index: 10;
     transition: color 0.2s;
+    text-decoration: none;
 }
 
-#discover-btn:hover {
+#discover-btn:hover, #config-link:hover {
     color: var(--text-color);
 }
 
