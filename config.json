@@ -5,21 +5,25 @@
       "name": "Atrium",
       "onCommand": "i2cset -y 1 0x10 0x02 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x02 0x00",
-      "dependsOn": ["Video Infra"]
+      "dependsOn": [
+        "Video"
+      ]
     },
     {
       "ledColor": "orange",
       "name": "Sanctuary",
       "onCommand": "i2cset -y 1 0x10 0x03 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x03 0x00",
-      "dependsOn": ["Video Infra"]
+      "dependsOn": [
+        "Video"
+      ]
     },
     {
-      "name": "Video Infra"
+      "name": "Video"
     },
     {
       "ledColor": "blue",
-      "name": "Cameras",
+      "name": "Camera",
       "onCommand": "i2cset -y 1 0x10 0x01 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x01 0x00"
     },
@@ -31,7 +35,7 @@
     },
     {
       "ledColor": "red",
-      "name": "Lights",
+      "name": "Light",
       "onCommand": "i2cset -y 1 0x10 0x04 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x04 0x00"
     }
@@ -46,44 +50,44 @@
   ],
   "gpio": [
     {
+      "group": "Hazer",
       "color": "white",
       "pin": 18,
       "bcmPin": 24,
       "mode": "switch",
-      "pull": "down",
-      "group": "Hazer"
+      "pull": "down"
     },
     {
+      "group": "Light",
       "color": "red",
       "pin": 11,
       "bcmPin": 17,
       "mode": "switch",
-      "pull": "down",
-      "group": "Lights"
+      "pull": "down"
     },
     {
+      "group": "Camera",
       "color": "blue",
       "pin": 16,
       "bcmPin": 23,
       "mode": "switch",
-      "pull": "down",
-      "group": "Cameras"
+      "pull": "down"
     },
     {
+      "group": "Atrium",
       "color": "green",
       "pin": 15,
       "bcmPin": 22,
       "mode": "switch",
-      "pull": "down",
-      "group": "Atrium"
+      "pull": "down"
     },
     {
+      "group": "Sanctuary",
       "color": "orange",
       "pin": 13,
       "bcmPin": 27,
       "mode": "switch",
-      "pull": "down",
-      "group": "Auditorium"
+      "pull": "down"
     }
   ],
   "specialActions": [
