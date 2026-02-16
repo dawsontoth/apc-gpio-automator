@@ -167,11 +167,11 @@ function render(state) {
                     </div>
                 </div>
                 <div class="outlet-controls">
-                    <button class="info-btn" onclick="showInfo('${outlet.host}', ${outlet.index})" title="Details">
+                    <button class="info-btn" onclick="showInfo('${outlet.host}', '${outlet.index}')" title="Details">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     </button>
                     <label class="switch">
-                        <input type="checkbox" ${outlet.state === 'on' ? 'checked' : ''} onchange="triggerOutlet('${outlet.host}', ${outlet.index}, this.checked)">
+                        <input type="checkbox" ${outlet.state === 'on' ? 'checked' : ''} onchange="triggerOutlet('${outlet.host}', '${outlet.index}', this.checked)">
                         <span class="slider"></span>
                     </label>
                 </div>
@@ -243,7 +243,10 @@ function showInfo(host, index) {
 
     infoContent.innerHTML = `
         <div class="info-label">Name</div>
-        <div class="info-value">${outlet.name}</div>
+        <div class="info-value name-edit-row">
+            <input type="text" id="edit-outlet-name" value="${outlet.name}" class="edit-input">
+            <button class="save-btn" onclick="saveName('${outlet.host}', '${outlet.index}')">Save</button>
+        </div>
         
         <div class="info-label">Location</div>
         <div class="info-value">${outlet.location}</div>
@@ -268,3 +271,12 @@ function showInfo(host, index) {
     
     infoDialog.showModal();
 }
+
+window.saveName = function(host, index) {
+    const nameInput = document.getElementById('edit-outlet-name');
+    const newName = nameInput.value.trim();
+    if (newName) {
+        socket.emit('renameOutlet', { host, index, name: newName });
+        infoDialog.close();
+    }
+};
