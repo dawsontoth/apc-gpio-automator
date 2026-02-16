@@ -1,15 +1,15 @@
 {
   "groups": [
     {
-      "ledColor": "idk",
+      "ledColor": "green",
       "name": "Atrium",
-      "onCommand": "i2cset -y 1 0x10 0x01 0xFF",
-      "offCommand": "i2cset -y 1 0x10 0x01 0x00",
+      "onCommand": "i2cset -y 1 0x10 0x02 0xFF",
+      "offCommand": "i2cset -y 1 0x10 0x02 0x00",
       "dependsOn": ["Video Infra"]
     },
     {
-      "ledColor": "idk",
-      "name": "Auditorium",
+      "ledColor": "orange",
+      "name": "Sanctuary",
       "onCommand": "i2cset -y 1 0x10 0x03 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x03 0x00",
       "dependsOn": ["Video Infra"]
@@ -30,7 +30,7 @@
       "offCommand": "i2cset -y 1 0x11 0x01 0x00"
     },
     {
-      "ledColor": "idk",
+      "ledColor": "red",
       "name": "Lights",
       "onCommand": "i2cset -y 1 0x10 0x04 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x04 0x00"
