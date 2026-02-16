@@ -112,7 +112,9 @@ function render(state) {
         const isConfirming = confirmingGroup && confirmingGroup.name === groupName;
 
         const card = document.createElement('div');
-        card.className = `group-card${isExpanded ? ' expanded' : ''}`;
+        const groupConfig = state.groupConfigs && state.groupConfigs[groupName];
+        const colorClass = groupConfig && groupConfig.ledColor ? ` color-${groupConfig.ledColor}` : '';
+        card.className = `group-card${isExpanded ? ' expanded' : ''}${colorClass}`;
 
         const header = document.createElement('div');
         header.className = 'group-header';
