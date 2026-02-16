@@ -19,7 +19,7 @@
     },
     {
       "ledColor": "blue",
-      "name": "Camera",
+      "name": "Cameras",
       "onCommand": "i2cset -y 1 0x10 0x01 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x01 0x00"
     },
