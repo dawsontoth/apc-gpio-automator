@@ -16,6 +16,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
 state.config = config;
 
+// Initialize manual device states
+if (config.manualDevices) {
+    config.manualDevices.forEach(d => {
+        state.manualDeviceStates[d.name] = 'off';
+    });
+}
+
 /**
  * @returns {Promise<void>}
  */

@@ -48,6 +48,38 @@
     "10.1.32.105",
     "10.1.32.106"
   ],
+  "manualDevices": [
+    {
+      "name": "Atrium Cafe TV",
+      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+    },
+    {
+      "name": "Atrium Cross TV",
+      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+    },
+    {
+      "name": "Sanctuary Left TV",
+      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+    },
+    {
+      "name": "Sanctuary Right TV",
+      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+    },
+    {
+      "name": "Sanctuary Confidence Left TV",
+      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+    },
+    {
+      "name": "Sanctuary Confidence Right TV",
+      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+    }
+  ],
   "gpio": [
     {
       "group": "Hazer",
