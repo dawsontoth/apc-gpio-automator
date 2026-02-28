@@ -109,6 +109,7 @@ function render(state) {
 
         const isExpanded = expandedGroups.has(groupName) || filterText !== ''; // Auto-expand when filtering
         const isAllOn = groupOutlets.every(o => o.state === 'on');
+        const isWorking = state.workingGroups && state.workingGroups.includes(groupName);
         const isConfirming = confirmingGroup && confirmingGroup.name === groupName;
 
         const card = document.createElement('div');
@@ -143,7 +144,10 @@ function render(state) {
         }
 
         header.innerHTML = `
-            <div class="group-name">${groupName}</div>
+            <div class="group-name">
+                ${groupName}
+                ${isWorking ? '<span class="working-indicator"></span>' : ''}
+            </div>
             ${controlsHtml}
         `;
         card.appendChild(header);

@@ -40,6 +40,11 @@
       "offCommand": "i2cset -y 1 0x10 0x04 0x00"
     }
   ],
+  "discoveredDeviceCustomizations": {
+    "Hazer Machine": {
+      "delayOnSeconds": 5
+    }
+  },
   "scanSubnets": [
     "10.1.32"
   ],
@@ -51,33 +56,39 @@
   "manualDevices": [
     {
       "name": "Atrium Cafe TV",
-      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 10
     },
     {
       "name": "Atrium Cross TV",
-      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 10
     },
     {
       "name": "Sanctuary Left TV",
-      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 10
     },
     {
       "name": "Sanctuary Right TV",
-      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 10
     },
     {
       "name": "Sanctuary Confidence Left TV",
-      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 10
     },
     {
       "name": "Sanctuary Confidence Right TV",
-      "onCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off"
+      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 10
     }
   ],
   "gpio": [
@@ -127,7 +138,7 @@
       "name": "Sound System Trigger",
       "onCommand": "i2cset -y 1 0x11 0x02 0xFF",
       "offCommand": "i2cset -y 1 0x11 0x02 0x00",
-      "autoOffAfter": 1000
+      "autoOffAfterSeconds": 1
     }
   ],
   "schedules": [

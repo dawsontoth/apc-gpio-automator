@@ -101,7 +101,7 @@ The `config.json` file is the central point for setting up your environment.
   - `name`: (String) The name of the group.
   - `onCommand`: (String, Optional) Shell command to run when the group is turned ON.
   - `offCommand`: (String, Optional) Shell command to run when the group is turned OFF.
-  - `autoOffAfter`: (Number, Optional) Delay in milliseconds after which the group will automatically turn OFF.
+  - `autoOffAfterSeconds`: (Number, Optional) Delay in seconds after which the group will automatically turn OFF.
 - `scanSubnets`: (Array of Strings) Subnets to scan for APC PDUs (e.g., `["10.1.32"]`).
 - `apcPDUs`: (Array of Strings) Specific IP addresses of APC PDUs to include regardless of scanning.
 - `gpio`: (Array of Objects) Configuration for local Raspberry Pi GPIO pins via `gpiod`.
@@ -112,7 +112,7 @@ The `config.json` file is the central point for setting up your environment.
   - `name`: (String, for `output`) Display name for the pin in the web interface.
   - `pull`: (String, Optional) `up` or `down` for input modes. Supported via `gpiomon`'s internal pull-up/down resistors.
   - `onCommand`/`offCommand`: (String, Optional) Commands to run when the pin state changes.
-  - `autoOffAfter`: (Number, Optional) For outputs, time in ms to automatically turn back off.
+  - `autoOffAfterSeconds`: (Number, Optional) For outputs, time in seconds to automatically turn back off.
   - `minTime`: (Number, for `momentary`) Minimum pulse duration in ms.
   - **Debounce**: `switch` mode pins are automatically debounced by 100ms using `gpiomon`'s `-p` (period) flag.
 - `schedules`: (Array of Objects) Automated tasks.
@@ -124,7 +124,7 @@ The `config.json` file is the central point for setting up your environment.
   - `name`: (String) The name of the action.
   - `onCommand`: (String, Optional) Shell command to run when the action is turned ON.
   - `offCommand`: (String, Optional) Shell command to run when the action is turned OFF.
-  - `autoOffAfter`: (Number, Optional) Delay in milliseconds after which the action will automatically turn OFF.
+  - `autoOffAfterSeconds`: (Number, Optional) Delay in seconds after which the action will automatically turn OFF.
 
 ## How It Works
 
