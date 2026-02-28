@@ -245,25 +245,53 @@ function showInfo(host, index) {
 
     if (!outlet) return;
 
-    infoContent.innerHTML = `
+    const isManual = host === 'Manual';
+    
+    let html = `
         <div class="info-label">Name</div>
         <div class="info-value name-edit-row">
             <input type="text" id="edit-outlet-name" value="${outlet.name}" class="edit-input">
-            <button class="save-btn" onclick="saveName('${outlet.host}', '${outlet.index}')">Save</button>
         </div>
-        
-        <div class="info-label">Location</div>
-        <div class="info-value">${outlet.location}</div>
-        
-        <div class="info-label">PDU Name</div>
-        <div class="info-value">${outlet.pduName}</div>
-        
-        <div class="info-label">Host</div>
-        <div class="info-value">${!outlet.host.startsWith('GPIO') ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.host}</a>` : outlet.host}</div>
-        
-        <div class="info-label">Index</div>
-        <div class="info-value">${outlet.index}</div>
-        
+    `;
+
+    if (isManual) {
+        html += `
+            <div class="info-label">On Command</div>
+            <div class="info-value">
+                <input type="text" id="edit-on-command" value="${outlet.onCommand || ''}" class="edit-input">
+            </div>
+            <div class="info-label">Off Command</div>
+            <div class="info-value">
+                <input type="text" id="edit-off-command" value="${outlet.offCommand || ''}" class="edit-input">
+            </div>
+        `;
+    } else {
+        html += `
+            <div class="info-label">Location</div>
+            <div class="info-value">${outlet.location}</div>
+            
+            <div class="info-label">PDU Name</div>
+            <div class="info-value">${outlet.pduName}</div>
+            
+            <div class="info-label">Host</div>
+            <div class="info-value">${!outlet.host.startsWith('GPIO') ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.host}</a>` : outlet.host}</div>
+            
+            <div class="info-label">Index</div>
+            <div class="info-value">${outlet.index}</div>
+        `;
+    }
+
+    html += `
+        <div class="info-label">Delay On (s)</div>
+        <div class="info-value">
+            <input type="number" id="edit-delay-on" value="${outlet.delayOnSeconds || ''}" class="edit-input" placeholder="None">
+        </div>
+
+        <div class="info-label">Delay Off (s)</div>
+        <div class="info-value">
+            <input type="number" id="edit-delay-off" value="${outlet.delayOffSeconds || ''}" class="edit-input" placeholder="None">
+        </div>
+
         <div class="info-label">Type</div>
         <div class="info-value">${outlet.type}</div>
         
@@ -271,16 +299,35 @@ function showInfo(host, index) {
         <div class="info-value" style="color: ${outlet.state === 'on' ? 'var(--on-color)' : 'var(--off-color)'}; font-weight: bold;">
             ${outlet.state.toUpperCase()}
         </div>
+
+        <div class="info-label"></div>
+        <div class="info-value">
+            <button class="save-btn" onclick="saveDetails('${outlet.host}', '${outlet.index}')">Save Changes</button>
+        </div>
     `;
-    
+
+    infoContent.innerHTML = html;
     infoDialog.showModal();
 }
 
-window.saveName = function(host, index) {
-    const nameInput = document.getElementById('edit-outlet-name');
-    const newName = nameInput.value.trim();
-    if (newName) {
-        socket.emit('renameOutlet', { host, index, name: newName });
-        infoDialog.close();
+window.saveDetails = function(host, index) {
+    const name = document.getElementById('edit-outlet-name').value.trim();
+    const delayOnSeconds = parseInt(document.getElementById('edit-delay-on').value, 10);
+    const delayOffSeconds = parseInt(document.getElementById('edit-delay-off').value, 10);
+    
+    const updates = {
+        host,
+        index,
+        name,
+        delayOnSeconds: isNaN(delayOnSeconds) ? null : delayOnSeconds,
+        delayOffSeconds: isNaN(delayOffSeconds) ? null : delayOffSeconds
+    };
+
+    if (host === 'Manual') {
+        updates.onCommand = document.getElementById('edit-on-command').value.trim();
+        updates.offCommand = document.getElementById('edit-off-command').value.trim();
     }
+
+    socket.emit('updateOutletDetails', updates);
+    infoDialog.close();
 };

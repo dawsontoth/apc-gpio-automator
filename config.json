@@ -43,6 +43,15 @@
   "discoveredDeviceCustomizations": {
     "Hazer Machine": {
       "delayOnSeconds": 5
+    },
+    "Atrium Bldg Atlona TX 1": {
+      "delayOffSeconds": 10
+    },
+    "Atrium Bldg Atlona TX 2": {
+      "delayOffSeconds": 10
+    },
+    "Sanctuary Atlona TX": {
+      "delayOffSeconds": 10
     }
   },
   "scanSubnets": [

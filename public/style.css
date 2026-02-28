@@ -470,6 +470,7 @@ dialog::backdrop {
 
 .info-value {
     word-break: break-all;
+    display: flex;
 }
 
 .name-edit-row {
