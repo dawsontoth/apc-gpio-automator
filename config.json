@@ -65,40 +65,22 @@
   ],
   "manualDevices": [
     {
-      "name": "Atrium Cafe TV",
-      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
-      "delayOnSeconds": 10
+      "name": "Atrium Building TVs 1",
+      "onCommand": "curl http://10.1.33.123/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://10.1.33.123/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 20
     },
     {
-      "name": "Atrium Cross TV",
-      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
-      "delayOnSeconds": 10
+      "name": "Atrium Building TVs 2",
+      "onCommand": "curl http://10.1.33.125/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://10.1.33.125/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 20
     },
     {
-      "name": "Sanctuary Left TV",
-      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
-      "delayOnSeconds": 10
-    },
-    {
-      "name": "Sanctuary Right TV",
-      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
-      "delayOnSeconds": 10
-    },
-    {
-      "name": "Sanctuary Confidence Left TV",
-      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
-      "delayOnSeconds": 10
-    },
-    {
-      "name": "Sanctuary Confidence Right TV",
-      "onCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
-      "offCommand": "curl http://172.16.10.207/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
-      "delayOnSeconds": 10
+      "name": "Sanctuary TVs",
+      "onCommand": "curl http://10.1.33.124/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
+      "offCommand": "curl http://10.1.33.124/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
+      "delayOnSeconds": 20
     }
   ],
   "gpio": [
