@@ -68,6 +68,27 @@ A comprehensive Node.js application for controlling APC PDUs and Raspberry Pi GP
    npm start
    ```
 
+### (Optional) Port Forwarding (80/443)
+
+By default, the application runs on port 3000. To allow the application to respond to standard HTTP (80) and HTTPS (443) ports without running as `sudo`, you can set up port forwarding using `iptables`.
+
+Run the following commands to forward traffic from ports 80 and 443 to port 3000:
+
+```bash
+# Forward port 80 to 3000
+sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 3000
+
+# Forward port 443 to 3000
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 3000
+```
+
+To make these rules persistent across reboots, install `iptables-persistent`:
+
+```bash
+sudo apt install iptables-persistent
+sudo netfilter-persistent save
+```
+
 ### Running as a Daemon (PM2)
 
 To keep the application running in the background and ensure it restarts on crash or reboot, you can use the built-in daemon scripts powered by [PM2](https://pm2.keymetrics.io/):
