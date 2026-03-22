@@ -1,6 +1,7 @@
 const socket = io();
 const groupsDiv = document.getElementById('groups');
 const specialActionsDiv = document.getElementById('special-actions');
+const schedulesDiv = document.getElementById('schedules');
 const infoDialog = document.getElementById('info-dialog');
 const infoContent = document.getElementById('info-content');
 const filterInput = document.getElementById('filter-input');
@@ -72,6 +73,33 @@ function render(state) {
     } else {
         specialActionsDiv.classList.add('hidden');
     }
+
+    // Render Schedules
+    if (state.schedules && state.schedules.length > 0) {
+        schedulesDiv.classList.remove('hidden');
+        schedulesDiv.innerHTML = '';
+        state.schedules.forEach((schedule, index) => {
+            const item = document.createElement('div');
+            item.className = 'special-action-item';
+            const isEnabled = !schedule.disabled;
+            const daysText = schedule.days && schedule.days.length > 0 ? ` (${schedule.days.join(',')})` : '';
+            const groupsText = schedule.groups && schedule.groups.length > 0 ? ` - ${schedule.groups.join(', ')}` : ' - All';
+            item.innerHTML = `
+                <div class="special-action-name">
+                    <input type="time" class="schedule-time-input" value="${schedule.time}" onchange="updateScheduleTime(${index}, this.value)">
+                    <span class="schedule-action ${schedule.action}" style="cursor: pointer" onclick="toggleScheduleAction(${index})">${schedule.action.toUpperCase()}</span>
+                    <span class="schedule-details" style="cursor: pointer" onclick="editScheduleGroups(${index})">${groupsText}${daysText}</span>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleScheduleEnabled(${index}, this.checked)">
+                    <span class="slider"></span>
+                </label>
+            `;
+            schedulesDiv.appendChild(item);
+        });
+    } else {
+        schedulesDiv.classList.add('hidden');
+    }
     
     let groupsToRender = state.groups;
     if (filterText) {
@@ -125,7 +153,9 @@ function render(state) {
         };
 
         let controlsHtml = '';
-        if (isConfirming) {
+        if (groupName === 'Other') {
+            controlsHtml = ''; // No master toggle for 'Other' group
+        } else if (isConfirming) {
             controlsHtml = `
                 <div class="confirm-actions">
                     <button class="confirm-btn confirm-no" onclick="cancelGroupToggle()">Cancel</button>
@@ -231,6 +261,36 @@ function triggerOutlet(host, index, isChecked) {
 window.triggerSpecialAction = function(name, isChecked) {
     const action = isChecked ? 'on' : 'off';
     socket.emit('triggerSpecialAction', { name, action });
+};
+
+window.toggleScheduleEnabled = function(index, isEnabled) {
+    const newSchedules = [...lastState.schedules];
+    newSchedules[index] = { ...newSchedules[index], disabled: !isEnabled };
+    socket.emit('updateSchedules', newSchedules);
+};
+
+window.updateScheduleTime = function(index, newTime) {
+    const newSchedules = [...lastState.schedules];
+    newSchedules[index] = { ...newSchedules[index], time: newTime };
+    socket.emit('updateSchedules', newSchedules);
+};
+
+window.toggleScheduleAction = function(index) {
+    const newSchedules = [...lastState.schedules];
+    newSchedules[index] = { ...newSchedules[index], action: newSchedules[index].action === 'on' ? 'off' : 'on' };
+    socket.emit('updateSchedules', newSchedules);
+};
+
+window.editScheduleGroups = function(index) {
+    const schedule = lastState.schedules[index];
+    const currentGroups = (schedule.groups || []).join(', ');
+    const newGroupsStr = prompt('Enter group names (comma separated, leave empty for all):', currentGroups);
+    if (newGroupsStr !== null) {
+        const newSchedules = [...lastState.schedules];
+        const newGroups = newGroupsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
+        newSchedules[index] = { ...newSchedules[index], groups: newGroups.length > 0 ? newGroups : undefined };
+        socket.emit('updateSchedules', newSchedules);
+    }
 };
 
 function showInfo(host, index) {
