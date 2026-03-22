@@ -18,30 +18,30 @@ state.config = config;
 
 // Initialize manual device states
 if (config.manualDevices) {
-    config.manualDevices.forEach(d => {
-        state.manualDeviceStates[d.name] = 'off';
-    });
+  config.manualDevices.forEach((d) => {
+    state.manualDeviceStates[d.name] = 'off';
+  });
 }
 
 /**
  * @returns {Promise<void>}
  */
 async function main() {
-    console.log('Starting APC GPIO Automator...');
-    
-    startWebServer();
-    initGPIO(triggerGroup, toggleGroup);
-    await discoverDevices();
+  console.log('Starting APC GPIO Automator...');
 
-    setInterval(() => {
-        for (const host in state.discoveredPDUs) {
-            pollPDUStatus(host);
-        }
-    }, 60_000);
+  startWebServer();
+  initGPIO(triggerGroup, toggleGroup);
+  await discoverDevices();
 
-    setInterval(discoverDevices, 5 * 60_000);
+  setInterval(() => {
+    for (const host in state.discoveredPDUs) {
+      pollPDUStatus(host);
+    }
+  }, 60_000);
 
-    setInterval(runSchedules, 10_000);
+  setInterval(discoverDevices, 5 * 60_000);
+
+  setInterval(runSchedules, 10_000);
 }
 
-main().catch(err => console.error('Main error:', err));
+main().catch((err) => console.error('Main error:', err));

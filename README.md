@@ -45,18 +45,21 @@ A comprehensive Node.js application for controlling APC PDUs and Raspberry Pi GP
 ### Setup
 
 1. Clone the repository:
+
    ```bash
    git clone <repository-url>
    cd apc-gpio-automator
    ```
 
 2. (Optional) Use the recommended Node.js version via nvm:
+
    ```bash
    nvm install
    nvm use
    ```
 
 3. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -94,12 +97,14 @@ sudo netfilter-persistent save
 To keep the application running in the background and ensure it restarts on crash or reboot, you can use the built-in daemon scripts powered by [PM2](https://pm2.keymetrics.io/):
 
 1. **Start the daemon**:
+
    ```bash
    npm run daemon
    ```
 
 2. **(Optional) Configure to start on boot**:
    To ensure the application starts automatically when the Raspberry Pi reboots:
+
    ```bash
    npx pm2 startup
    # Follow the instructions provided by the command output, then run:
@@ -150,17 +155,21 @@ The `config.json` file is the central point for setting up your environment.
 ## How It Works
 
 ### Grouping Logic
+
 An outlet (APC or GPIO) is associated with a group if the group's name is found anywhere within the outlet's name (case-insensitive). For example, an outlet named "Stage Left Lights" will automatically be included in a group named "Lights".
 
 ### SNMP Connectivity
+
 The application uses **SNMPv1** with the community string **"private"** to communicate with APC PDUs. It supports both newer RPDU2 (AP8xxx series) and older RPDU (AP7xxx series) models.
 
 ### Local GPIO
+
 The system uses the `gpiod` shell tools (`gpiomon`, `gpioset`, `gpioget`) for local GPIO control on Raspberry Pi. This requires the `gpiod` package to be installed on the system. Input pins used in `switch` mode are automatically debounced using `gpiomon`'s hardware-backed glitch filters (where supported) or software period filtering. Internal pull-up/down resistors are supported and can be configured in `config.json`.
 
 ## Web Interface
 
 Once started, the web server is accessible at:
+
 - `http://localhost:3000`
 - `http://<your-raspberry-pi-ip>:3000`
 

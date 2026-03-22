@@ -14,189 +14,206 @@ let confirmingGroup = null; // { name, action, timeout }
 let filterText = '';
 
 socket.on('state', (state) => {
-    lastState = state;
-    discoverBtn.classList.remove('spinning');
-    render(state);
+  lastState = state;
+  discoverBtn.classList.remove('spinning');
+  render(state);
 });
 
 filterInput.addEventListener('input', (e) => {
-    filterText = e.target.value.toLowerCase();
-    clearFilterBtn.classList.toggle('hidden', filterText === '');
-    render(lastState);
+  filterText = e.target.value.toLowerCase();
+  clearFilterBtn.classList.toggle('hidden', filterText === '');
+  render(lastState);
 });
 
 clearFilterBtn.addEventListener('click', () => {
-    filterInput.value = '';
-    filterText = '';
-    clearFilterBtn.classList.add('hidden');
-    render(lastState);
+  filterInput.value = '';
+  filterText = '';
+  clearFilterBtn.classList.add('hidden');
+  render(lastState);
 });
 
 discoverBtn.addEventListener('click', () => {
-    discoverBtn.classList.add('spinning');
-    socket.emit('discoverDevices');
-    // The 'state' update will eventually come back and we can stop spinning then,
-    // but for now let's just let it spin for a bit if we don't have a specific 'discoveryComplete' event.
-    // Actually, when 'state' is received, we can stop spinning.
+  discoverBtn.classList.add('spinning');
+  socket.emit('discoverDevices');
+  // The 'state' update will eventually come back and we can stop spinning then,
+  // but for now let's just let it spin for a bit if we don't have a specific 'discoveryComplete' event.
+  // Actually, when 'state' is received, we can stop spinning.
 });
 
 function toggleCollapse(groupName) {
-    if (expandedGroups.has(groupName)) {
-        expandedGroups.delete(groupName);
-    } else {
-        expandedGroups.add(groupName);
-    }
-    render(lastState);
+  if (expandedGroups.has(groupName)) {
+    expandedGroups.delete(groupName);
+  } else {
+    expandedGroups.add(groupName);
+  }
+  render(lastState);
 }
 
 function render(state) {
-    if (!state) return;
-    groupsDiv.innerHTML = '';
+  if (!state) return;
+  groupsDiv.innerHTML = '';
 
-    // Render Special Actions
-    if (state.specialActions && state.specialActions.length > 0) {
-        specialActionsDiv.classList.remove('hidden');
-        specialActionsDiv.innerHTML = '';
-        state.specialActions.forEach(action => {
-            const item = document.createElement('div');
-            item.className = 'special-action-item';
-            const isOn = action.state === 'on';
-            item.innerHTML = `
+  // Render Special Actions
+  if (state.specialActions && state.specialActions.length > 0) {
+    specialActionsDiv.classList.remove('hidden');
+    specialActionsDiv.innerHTML = '';
+    state.specialActions.forEach((action) => {
+      const item = document.createElement('div');
+      item.className = 'special-action-item';
+      const isOn = action.state === 'on';
+      item.innerHTML = `
                 <span class="special-action-name">${action.name}</span>
                 <label class="switch">
-                    <input type="checkbox" ${isOn ? 'checked' : ''} onchange="triggerSpecialAction('${action.name}', this.checked)">
+                    <input type="checkbox" ${
+                      isOn ? 'checked' : ''
+                    } onchange="triggerSpecialAction('${action.name}', this.checked)">
                     <span class="slider"></span>
                 </label>
             `;
-            specialActionsDiv.appendChild(item);
-        });
-    } else {
-        specialActionsDiv.classList.add('hidden');
-    }
+      specialActionsDiv.appendChild(item);
+    });
+  } else {
+    specialActionsDiv.classList.add('hidden');
+  }
 
-    // Render Schedules
-    if (state.schedules && state.schedules.length > 0) {
-        schedulesDiv.classList.remove('hidden');
-        schedulesDiv.innerHTML = '';
-        state.schedules.forEach((schedule, index) => {
-            const item = document.createElement('div');
-            item.className = 'special-action-item';
-            const isEnabled = !schedule.disabled;
-            const daysText = schedule.days && schedule.days.length > 0 ? ` (${schedule.days.join(',')})` : '';
-            const groupsText = schedule.groups && schedule.groups.length > 0 ? ` - ${schedule.groups.join(', ')}` : ' - All';
-            item.innerHTML = `
+  // Render Schedules
+  if (state.schedules && state.schedules.length > 0) {
+    schedulesDiv.classList.remove('hidden');
+    schedulesDiv.innerHTML = '';
+    state.schedules.forEach((schedule, index) => {
+      const item = document.createElement('div');
+      item.className = 'special-action-item';
+      const isEnabled = !schedule.disabled;
+      const daysText =
+        schedule.days && schedule.days.length > 0 ? ` (${schedule.days.join(',')})` : '';
+      const groupsText =
+        schedule.groups && schedule.groups.length > 0
+          ? ` - ${schedule.groups.join(', ')}`
+          : ' - All';
+      item.innerHTML = `
                 <div class="special-action-name">
                     <input type="time" class="schedule-time-input" value="${schedule.time}" onchange="updateScheduleTime(${index}, this.value)">
                     <span class="schedule-action ${schedule.action}" style="cursor: pointer" onclick="toggleScheduleAction(${index})">${schedule.action.toUpperCase()}</span>
                     <span class="schedule-details" style="cursor: pointer" onclick="editScheduleGroups(${index})">${groupsText}${daysText}</span>
                 </div>
                 <label class="switch">
-                    <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleScheduleEnabled(${index}, this.checked)">
+                    <input type="checkbox" ${
+                      isEnabled ? 'checked' : ''
+                    } onchange="toggleScheduleEnabled(${index}, this.checked)">
                     <span class="slider"></span>
                 </label>
             `;
-            schedulesDiv.appendChild(item);
-        });
-    } else {
-        schedulesDiv.classList.add('hidden');
+      schedulesDiv.appendChild(item);
+    });
+  } else {
+    schedulesDiv.classList.add('hidden');
+  }
+
+  let groupsToRender = state.groups;
+  if (filterText) {
+    groupsToRender = {};
+    for (const groupName in state.groups) {
+      const groupMatches = groupName.toLowerCase().includes(filterText);
+      const outlets = state.groups[groupName].filter(
+        (outlet) =>
+          groupMatches ||
+          outlet.name.toLowerCase().includes(filterText) ||
+          (outlet.location && outlet.location.toLowerCase().includes(filterText)),
+      );
+      if (outlets.length > 0) {
+        groupsToRender[groupName] = outlets;
+      }
     }
-    
-    let groupsToRender = state.groups;
-    if (filterText) {
-        groupsToRender = {};
-        for (const groupName in state.groups) {
-            const groupMatches = groupName.toLowerCase().includes(filterText);
-            const outlets = state.groups[groupName].filter(outlet => 
-                groupMatches ||
-                outlet.name.toLowerCase().includes(filterText) ||
-                (outlet.location && outlet.location.toLowerCase().includes(filterText))
-            );
-            if (outlets.length > 0) {
-                groupsToRender[groupName] = outlets;
-            }
-        }
-    }
+  }
 
-    const groupNames = Object.keys(groupsToRender).sort();
-    
-    // Put 'Other' at the end
-    const otherIdx = groupNames.indexOf('Other');
-    if (otherIdx > -1) {
-        groupNames.splice(otherIdx, 1);
-        groupNames.push('Other');
-    }
+  const groupNames = Object.keys(groupsToRender).sort();
 
-    if (groupNames.length === 0) {
-        groupsDiv.innerHTML = `<p style="text-align: center; color: var(--text-muted);">${filterText ? 'No outlets match your search.' : 'No PDUs discovered yet.'}</p>`;
-        return;
-    }
+  // Put 'Other' at the end
+  const otherIdx = groupNames.indexOf('Other');
+  if (otherIdx > -1) {
+    groupNames.splice(otherIdx, 1);
+    groupNames.push('Other');
+  }
 
-    groupNames.forEach(groupName => {
-        const groupOutlets = groupsToRender[groupName];
-        if (groupOutlets.length === 0) return;
+  if (groupNames.length === 0) {
+    groupsDiv.innerHTML = `<p style="text-align: center; color: var(--text-muted);">${
+      filterText ? 'No outlets match your search.' : 'No PDUs discovered yet.'
+    }</p>`;
+    return;
+  }
 
-        const isExpanded = expandedGroups.has(groupName) || filterText !== ''; // Auto-expand when filtering
-        const isAllOn = groupOutlets.every(o => o.state === 'on');
-        const isWorking = state.workingGroups && state.workingGroups.includes(groupName);
-        const isConfirming = confirmingGroup && confirmingGroup.name === groupName;
+  groupNames.forEach((groupName) => {
+    const groupOutlets = groupsToRender[groupName];
+    if (groupOutlets.length === 0) return;
 
-        const card = document.createElement('div');
-        const groupConfig = state.groupConfigs && state.groupConfigs[groupName];
-        const colorClass = groupConfig && groupConfig.ledColor ? ` color-${groupConfig.ledColor}` : '';
-        card.className = `group-card${isExpanded ? ' expanded' : ''}${colorClass}`;
+    const isExpanded = expandedGroups.has(groupName) || filterText !== ''; // Auto-expand when filtering
+    const isAllOn = groupOutlets.every((o) => o.state === 'on');
+    const isWorking = state.workingGroups && state.workingGroups.includes(groupName);
+    const isConfirming = confirmingGroup && confirmingGroup.name === groupName;
 
-        const header = document.createElement('div');
-        header.className = 'group-header';
-        header.onclick = (e) => {
-            if (e.target.closest('.switch') || e.target.closest('.confirm-btn')) return;
-            toggleCollapse(groupName);
-        };
+    const card = document.createElement('div');
+    const groupConfig = state.groupConfigs && state.groupConfigs[groupName];
+    const colorClass = groupConfig && groupConfig.ledColor ? ` color-${groupConfig.ledColor}` : '';
+    card.className = `group-card${isExpanded ? ' expanded' : ''}${colorClass}`;
 
-        let controlsHtml = '';
-        if (groupName === 'Other') {
-            controlsHtml = ''; // No master toggle for 'Other' group
-        } else if (isConfirming) {
-            controlsHtml = `
+    const header = document.createElement('div');
+    header.className = 'group-header';
+    header.onclick = (e) => {
+      if (e.target.closest('.switch') || e.target.closest('.confirm-btn')) return;
+      toggleCollapse(groupName);
+    };
+
+    let controlsHtml = '';
+    if (groupName === 'Other') {
+      controlsHtml = ''; // No master toggle for 'Other' group
+    } else if (isConfirming) {
+      controlsHtml = `
                 <div class="confirm-actions">
                     <button class="confirm-btn confirm-no" onclick="cancelGroupToggle()">Cancel</button>
-                    <button class="confirm-btn confirm-yes ${confirmingGroup.action === 'off' ? 'action-off' : ''}" onclick="executeGroupToggle()">
+                    <button class="confirm-btn confirm-yes ${
+                      confirmingGroup.action === 'off' ? 'action-off' : ''
+                    }" onclick="executeGroupToggle()">
                         Confirm ${confirmingGroup.action.toUpperCase()}
                     </button>
                 </div>
             `;
-        } else {
-            controlsHtml = `
+    } else {
+      controlsHtml = `
                 <label class="switch group-switch">
-                    <input type="checkbox" ${isAllOn ? 'checked' : ''} onchange="toggleGroup('${groupName}', this.checked)">
+                    <input type="checkbox" ${
+                      isAllOn ? 'checked' : ''
+                    } onchange="toggleGroup('${groupName}', this.checked)">
                     <span class="slider"></span>
                 </label>
             `;
-        }
+    }
 
-        header.innerHTML = `
+    header.innerHTML = `
             <div class="group-name">
                 ${groupName}
                 ${isWorking ? '<span class="working-indicator"></span>' : ''}
             </div>
             ${controlsHtml}
         `;
-        card.appendChild(header);
+    card.appendChild(header);
 
-        const list = document.createElement('div');
-        list.className = 'outlet-list';
+    const list = document.createElement('div');
+    list.className = 'outlet-list';
 
-        groupOutlets.forEach(outlet => {
-            const item = document.createElement('div');
-            item.className = 'outlet-item';
-            
-            item.innerHTML = `
+    groupOutlets.forEach((outlet) => {
+      const item = document.createElement('div');
+      item.className = 'outlet-item';
+
+      item.innerHTML = `
                 <div class="outlet-info">
                     <div class="outlet-label">
                         <span class="outlet-name">${outlet.name}</span>
                         <span class="outlet-location">
-                            ${!outlet.host.startsWith('GPIO')
-                              ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.location}</a>`
-                              : outlet.location}
+                            ${
+                              !outlet.host.startsWith('GPIO')
+                                ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.location}</a>`
+                                : outlet.location
+                            }
                         </span>
                     </div>
                 </div>
@@ -205,117 +222,131 @@ function render(state) {
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     </button>
                     <label class="switch">
-                        <input type="checkbox" ${outlet.state === 'on' ? 'checked' : ''} onchange="triggerOutlet('${outlet.host}', '${outlet.index}', this.checked)">
+                        <input type="checkbox" ${
+                          outlet.state === 'on' ? 'checked' : ''
+                        } onchange="triggerOutlet('${outlet.host}', '${outlet.index}', this.checked)">
                         <span class="slider"></span>
                     </label>
                 </div>
             `;
-            list.appendChild(item);
-        });
-
-        card.appendChild(list);
-        groupsDiv.appendChild(card);
+      list.appendChild(item);
     });
+
+    card.appendChild(list);
+    groupsDiv.appendChild(card);
+  });
 }
 
 function toggleGroup(group, isChecked) {
-    const action = isChecked ? 'on' : 'off';
-    
-    if (confirmingGroup) {
-        clearTimeout(confirmingGroup.timeout);
-    }
+  const action = isChecked ? 'on' : 'off';
 
-    confirmingGroup = {
-        name: group,
-        action: action,
-        timeout: setTimeout(() => {
-            confirmingGroup = null;
-            render(lastState);
-        }, 5000)
-    };
-    
-    render(lastState);
+  if (confirmingGroup) {
+    clearTimeout(confirmingGroup.timeout);
+  }
+
+  confirmingGroup = {
+    name: group,
+    action: action,
+    timeout: setTimeout(() => {
+      confirmingGroup = null;
+      render(lastState);
+    }, 5000),
+  };
+
+  render(lastState);
 }
 
 function executeGroupToggle() {
-    if (!confirmingGroup) return;
-    const { name, action, timeout } = confirmingGroup;
-    clearTimeout(timeout);
-    socket.emit('triggerGroup', { group: name, action });
-    confirmingGroup = null;
-    render(lastState);
+  if (!confirmingGroup) return;
+  const { name, action, timeout } = confirmingGroup;
+  clearTimeout(timeout);
+  socket.emit('triggerGroup', { group: name, action });
+  confirmingGroup = null;
+  render(lastState);
 }
 
 function cancelGroupToggle() {
-    if (!confirmingGroup) return;
-    clearTimeout(confirmingGroup.timeout);
-    confirmingGroup = null;
-    render(lastState);
+  if (!confirmingGroup) return;
+  clearTimeout(confirmingGroup.timeout);
+  confirmingGroup = null;
+  render(lastState);
 }
 
 function triggerOutlet(host, index, isChecked) {
-    const action = isChecked ? 'on' : 'off';
-    socket.emit('triggerOutlet', { host, index, action });
+  const action = isChecked ? 'on' : 'off';
+  socket.emit('triggerOutlet', { host, index, action });
 }
 
-window.triggerSpecialAction = function(name, isChecked) {
-    const action = isChecked ? 'on' : 'off';
-    socket.emit('triggerSpecialAction', { name, action });
+window.triggerSpecialAction = function (name, isChecked) {
+  const action = isChecked ? 'on' : 'off';
+  socket.emit('triggerSpecialAction', { name, action });
 };
 
-window.toggleScheduleEnabled = function(index, isEnabled) {
+window.toggleScheduleEnabled = function (index, isEnabled) {
+  const newSchedules = [...lastState.schedules];
+  newSchedules[index] = { ...newSchedules[index], disabled: !isEnabled };
+  socket.emit('updateSchedules', newSchedules);
+};
+
+window.updateScheduleTime = function (index, newTime) {
+  const newSchedules = [...lastState.schedules];
+  newSchedules[index] = { ...newSchedules[index], time: newTime };
+  socket.emit('updateSchedules', newSchedules);
+};
+
+window.toggleScheduleAction = function (index) {
+  const newSchedules = [...lastState.schedules];
+  newSchedules[index] = {
+    ...newSchedules[index],
+    action: newSchedules[index].action === 'on' ? 'off' : 'on',
+  };
+  socket.emit('updateSchedules', newSchedules);
+};
+
+window.editScheduleGroups = function (index) {
+  const schedule = lastState.schedules[index];
+  const currentGroups = (schedule.groups || []).join(', ');
+  const newGroupsStr = prompt(
+    'Enter group names (comma separated, leave empty for all):',
+    currentGroups,
+  );
+  if (newGroupsStr !== null) {
     const newSchedules = [...lastState.schedules];
-    newSchedules[index] = { ...newSchedules[index], disabled: !isEnabled };
+    const newGroups = newGroupsStr
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+    newSchedules[index] = {
+      ...newSchedules[index],
+      groups: newGroups.length > 0 ? newGroups : undefined,
+    };
     socket.emit('updateSchedules', newSchedules);
-};
-
-window.updateScheduleTime = function(index, newTime) {
-    const newSchedules = [...lastState.schedules];
-    newSchedules[index] = { ...newSchedules[index], time: newTime };
-    socket.emit('updateSchedules', newSchedules);
-};
-
-window.toggleScheduleAction = function(index) {
-    const newSchedules = [...lastState.schedules];
-    newSchedules[index] = { ...newSchedules[index], action: newSchedules[index].action === 'on' ? 'off' : 'on' };
-    socket.emit('updateSchedules', newSchedules);
-};
-
-window.editScheduleGroups = function(index) {
-    const schedule = lastState.schedules[index];
-    const currentGroups = (schedule.groups || []).join(', ');
-    const newGroupsStr = prompt('Enter group names (comma separated, leave empty for all):', currentGroups);
-    if (newGroupsStr !== null) {
-        const newSchedules = [...lastState.schedules];
-        const newGroups = newGroupsStr.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        newSchedules[index] = { ...newSchedules[index], groups: newGroups.length > 0 ? newGroups : undefined };
-        socket.emit('updateSchedules', newSchedules);
-    }
+  }
 };
 
 function showInfo(host, index) {
-    if (!lastState) return;
-    
-    // Find outlet in any group
-    let outlet = null;
-    for (const group in lastState.groups) {
-        outlet = lastState.groups[group].find(o => o.host === host && o.index === index);
-        if (outlet) break;
-    }
+  if (!lastState) return;
 
-    if (!outlet) return;
+  // Find outlet in any group
+  let outlet = null;
+  for (const group in lastState.groups) {
+    outlet = lastState.groups[group].find((o) => o.host === host && o.index === index);
+    if (outlet) break;
+  }
 
-    const isManual = host === 'Manual';
-    
-    let html = `
+  if (!outlet) return;
+
+  const isManual = host === 'Manual';
+
+  let html = `
         <div class="info-label">Name</div>
         <div class="info-value name-edit-row">
             <input type="text" id="edit-outlet-name" value="${outlet.name}" class="edit-input">
         </div>
     `;
 
-    if (isManual) {
-        html += `
+  if (isManual) {
+    html += `
             <div class="info-label">On Command</div>
             <div class="info-value">
                 <input type="text" id="edit-on-command" value="${outlet.onCommand || ''}" class="edit-input">
@@ -325,8 +356,8 @@ function showInfo(host, index) {
                 <input type="text" id="edit-off-command" value="${outlet.offCommand || ''}" class="edit-input">
             </div>
         `;
-    } else {
-        html += `
+  } else {
+    html += `
             <div class="info-label">Location</div>
             <div class="info-value">${outlet.location}</div>
             
@@ -334,14 +365,18 @@ function showInfo(host, index) {
             <div class="info-value">${outlet.pduName}</div>
             
             <div class="info-label">Host</div>
-            <div class="info-value">${!outlet.host.startsWith('GPIO') ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.host}</a>` : outlet.host}</div>
+            <div class="info-value">${
+              !outlet.host.startsWith('GPIO')
+                ? `<a href="http://${outlet.host}" target="_blank" class="pdu-link">${outlet.host}</a>`
+                : outlet.host
+            }</div>
             
             <div class="info-label">Index</div>
             <div class="info-value">${outlet.index}</div>
         `;
-    }
+  }
 
-    html += `
+  html += `
         <div class="info-label">Delay On (s)</div>
         <div class="info-value">
             <input type="number" id="edit-delay-on" value="${outlet.delayOnSeconds || ''}" class="edit-input" placeholder="None">
@@ -356,7 +391,9 @@ function showInfo(host, index) {
         <div class="info-value">${outlet.type}</div>
         
         <div class="info-label">Status</div>
-        <div class="info-value" style="color: ${outlet.state === 'on' ? 'var(--on-color)' : 'var(--off-color)'}; font-weight: bold;">
+        <div class="info-value" style="color: ${
+          outlet.state === 'on' ? 'var(--on-color)' : 'var(--off-color)'
+        }; font-weight: bold;">
             ${outlet.state.toUpperCase()}
         </div>
 
@@ -366,28 +403,28 @@ function showInfo(host, index) {
         </div>
     `;
 
-    infoContent.innerHTML = html;
-    infoDialog.showModal();
+  infoContent.innerHTML = html;
+  infoDialog.showModal();
 }
 
-window.saveDetails = function(host, index) {
-    const name = document.getElementById('edit-outlet-name').value.trim();
-    const delayOnSeconds = parseInt(document.getElementById('edit-delay-on').value, 10);
-    const delayOffSeconds = parseInt(document.getElementById('edit-delay-off').value, 10);
-    
-    const updates = {
-        host,
-        index,
-        name,
-        delayOnSeconds: isNaN(delayOnSeconds) ? null : delayOnSeconds,
-        delayOffSeconds: isNaN(delayOffSeconds) ? null : delayOffSeconds
-    };
+window.saveDetails = function (host, index) {
+  const name = document.getElementById('edit-outlet-name').value.trim();
+  const delayOnSeconds = parseInt(document.getElementById('edit-delay-on').value, 10);
+  const delayOffSeconds = parseInt(document.getElementById('edit-delay-off').value, 10);
 
-    if (host === 'Manual') {
-        updates.onCommand = document.getElementById('edit-on-command').value.trim();
-        updates.offCommand = document.getElementById('edit-off-command').value.trim();
-    }
+  const updates = {
+    host,
+    index,
+    name,
+    delayOnSeconds: isNaN(delayOnSeconds) ? null : delayOnSeconds,
+    delayOffSeconds: isNaN(delayOffSeconds) ? null : delayOffSeconds,
+  };
 
-    socket.emit('updateOutletDetails', updates);
-    infoDialog.close();
+  if (host === 'Manual') {
+    updates.onCommand = document.getElementById('edit-on-command').value.trim();
+    updates.offCommand = document.getElementById('edit-off-command').value.trim();
+  }
+
+  socket.emit('updateOutletDetails', updates);
+  infoDialog.close();
 };
