@@ -1,0 +1,238 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "APC GPIO Automator Configuration",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Path to the configuration schema."
+    },
+    "groups": {
+      "type": "array",
+      "description": "Definition of control groups.",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "The name of the group."
+          },
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the group."
+              },
+              "ledColor": {
+                "type": "string",
+                "enum": ["green", "orange", "blue", "white", "red"],
+                "description": "The color of the LED indicator for this group."
+              },
+              "onCommand": {
+                "type": "string",
+                "description": "Shell command to run when the group is turned on."
+              },
+              "offCommand": {
+                "type": "string",
+                "description": "Shell command to run when the group is turned off."
+              },
+              "dependsOn": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "List of groups that this group depends on. They will be turned on first."
+              }
+            },
+            "required": ["name"]
+          }
+        ]
+      }
+    },
+    "discoveredDeviceCustomizations": {
+      "type": "object",
+      "description": "Customizations for devices discovered via SNMP.",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "delayOnSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Delay in seconds before turning on this device."
+          },
+          "delayOffSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Delay in seconds before turning off this device."
+          }
+        }
+      }
+    },
+    "scanSubnets": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Subnets to scan for APC PDUs (e.g., '10.1.32')."
+    },
+    "apcPDUs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit list of APC PDU IP addresses."
+    },
+    "manualDevices": {
+      "type": "array",
+      "description": "Devices controlled via shell commands instead of SNMP.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Unique name for the manual device."
+          },
+          "onCommand": {
+            "type": "string",
+            "description": "Shell command to turn the device on."
+          },
+          "offCommand": {
+            "type": "string",
+            "description": "Shell command to turn the device off."
+          },
+          "delayOnSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Delay in seconds before turning on this device."
+          },
+          "delayOffSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Delay in seconds before turning off this device."
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    "gpio": {
+      "oneOf": [
+        {
+          "type": "array",
+          "description": "Configuration for Raspberry Pi GPIO pins.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "group": {
+                "type": "string",
+                "description": "The group this GPIO pin belongs to."
+              },
+              "color": {
+                "type": "string",
+                "description": "Color associated with this pin."
+              },
+              "pin": {
+                "type": "integer",
+                "description": "Physical pin number or generic pin identifier."
+              },
+              "bcmPin": {
+                "type": "integer",
+                "description": "BCM pin number used by gpiod tools."
+              },
+              "mode": {
+                "type": "string",
+                "enum": ["switch", "output"],
+                "default": "switch",
+                "description": "GPIO mode: 'switch' for input toggle, 'output' for control."
+              },
+              "pull": {
+                "type": "string",
+                "enum": ["up", "down", "none"],
+                "default": "none",
+                "description": "Internal pull-up/down resistor configuration."
+              },
+              "name": {
+                "type": "string",
+                "description": "Display name for the pin (especially for 'output' mode)."
+              },
+              "host": {
+                "type": "string",
+                "default": "127.0.0.1",
+                "description": "Host address for remote GPIO control (if applicable)."
+              },
+              "port": {
+                "type": "integer",
+                "default": 8888,
+                "description": "Port for remote GPIO control (if applicable)."
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "description": "Simple mapping of pin numbers to group names.",
+          "additionalProperties": { "type": "string" }
+        }
+      ]
+    },
+    "specialActions": {
+      "type": "array",
+      "description": "One-off actions with specific behavior.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Display name of the special action."
+          },
+          "onCommand": {
+            "type": "string",
+            "description": "Shell command to run for the 'on' action."
+          },
+          "offCommand": {
+            "type": "string",
+            "description": "Shell command to run for the 'off' action."
+          },
+          "autoOffAfterSeconds": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Automatically turn off after this many seconds."
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    "schedules": {
+      "type": "array",
+      "description": "Timed actions for groups.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string",
+            "pattern": "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Time in HH:MM format (24-hour)."
+          },
+          "action": {
+            "type": "string",
+            "enum": ["on", "off"],
+            "description": "Action to perform at the scheduled time."
+          },
+          "groups": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of group names to trigger. Empty or missing triggers all groups."
+          },
+          "days": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+            },
+            "description": "Days of the week to run this schedule."
+          },
+          "disabled": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether this schedule is disabled."
+          }
+        },
+        "required": ["time", "action"]
+      }
+    }
+  },
+  "additionalProperties": false
+}

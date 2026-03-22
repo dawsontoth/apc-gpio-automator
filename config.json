@@ -1,4 +1,5 @@
 {
+  "$schema": "./config.schema.json",
   "groups": [
     {
       "ledColor": "green",
@@ -125,7 +126,15 @@
   "schedules": [
     {
       "time": "00:00",
-      "action": "off"
+      "action": "off",
+      "groups": [
+        "Atrium",
+        "Sanctuary",
+        "Video",
+        "Camera",
+        "Hazer",
+        "Light"
+      ]
     }
   ]
 }
