@@ -6,14 +6,18 @@
       "name": "Atrium",
       "onCommand": "i2cset -y 1 0x10 0x02 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x02 0x00",
-      "dependsOn": ["Video"]
+      "dependsOn": [
+        "Video"
+      ]
     },
     {
       "ledColor": "orange",
       "name": "Sanctuary",
       "onCommand": "i2cset -y 1 0x10 0x03 0xFF",
       "offCommand": "i2cset -y 1 0x10 0x03 0x00",
-      "dependsOn": ["Video"]
+      "dependsOn": [
+        "Video"
+      ]
     },
     {
       "name": "Video"
@@ -51,8 +55,16 @@
       "delayOffSeconds": 10
     }
   },
-  "scanSubnets": ["10.1.32"],
-  "apcPDUs": ["10.1.32.101", "10.1.32.103", "10.1.32.105", "10.1.32.106", "10.1.32.112"],
+  "scanSubnets": [
+    "10.1.32"
+  ],
+  "apcPDUs": [
+    "10.1.32.101",
+    "10.1.32.103",
+    "10.1.32.105",
+    "10.1.32.106",
+    "10.1.32.112"
+  ],
   "tpLinkKasaDevices": [],
   "manualDevices": [
     {
@@ -60,7 +72,8 @@
       "onCommand": "curl --retry 5 http://10.1.33.123/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
       "offCommand": "curl --retry 5 http://10.1.33.123/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
       "delayOnSeconds": 20
-    },    {
+    },
+    {
       "name": "Atrium Building TVs 2",
       "onCommand": "curl --retry 5 http://10.1.33.125/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
       "offCommand": "curl --retry 5 http://10.1.33.125/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
@@ -134,7 +147,8 @@
         "Camera",
         "Hazer",
         "Light"
-      ]
+      ],
+      "disabled": true
     }
   ]
 }
