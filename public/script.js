@@ -237,7 +237,7 @@ function render(state) {
   });
 }
 
-function toggleGroup(group, isChecked) {
+window.toggleGroup = function (group, isChecked) {
   const action = isChecked ? 'on' : 'off';
 
   if (confirmingGroup) {
@@ -256,7 +256,7 @@ function toggleGroup(group, isChecked) {
   render(lastState);
 }
 
-function executeGroupToggle() {
+window.executeGroupToggle = function () {
   if (!confirmingGroup) return;
   const { name, action, timeout } = confirmingGroup;
   clearTimeout(timeout);
@@ -265,14 +265,14 @@ function executeGroupToggle() {
   render(lastState);
 }
 
-function cancelGroupToggle() {
+window.cancelGroupToggle = function () {
   if (!confirmingGroup) return;
   clearTimeout(confirmingGroup.timeout);
   confirmingGroup = null;
   render(lastState);
 }
 
-function triggerOutlet(host, index, isChecked) {
+window.triggerOutlet = function (host, index, isChecked) {
   const action = isChecked ? 'on' : 'off';
   socket.emit('triggerOutlet', { host, index, action });
 }
@@ -324,7 +324,7 @@ window.editScheduleGroups = function (index) {
   }
 };
 
-function showInfo(host, index) {
+window.showInfo = function (host, index) {
   if (!lastState) return;
 
   // Find outlet in any group
