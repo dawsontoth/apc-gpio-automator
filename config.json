@@ -53,14 +53,14 @@
   },
   "scanSubnets": ["10.1.32"],
   "apcPDUs": ["10.1.32.101", "10.1.32.103", "10.1.32.105", "10.1.32.106", "10.1.32.112"],
+  "tpLinkKasaDevices": [],
   "manualDevices": [
     {
       "name": "Atrium Building TVs 1",
       "onCommand": "curl --retry 5 http://10.1.33.123/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
       "offCommand": "curl --retry 5 http://10.1.33.123/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",
       "delayOnSeconds": 20
-    },
-    {
+    },    {
       "name": "Atrium Building TVs 2",
       "onCommand": "curl --retry 5 http://10.1.33.125/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=on",
       "offCommand": "curl --retry 5 http://10.1.33.125/aj.html\\?a\\=command\\&cmd\\=TrigCEC\\&p1\\=off",

@@ -76,6 +76,11 @@
       "items": { "type": "string" },
       "description": "Explicit list of APC PDU IP addresses."
     },
+    "tpLinkKasaDevices": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Explicit list of TP-Link Kasa device IP addresses."
+    },
     "manualDevices": {
       "type": "array",
       "description": "Devices controlled via shell commands instead of SNMP.",

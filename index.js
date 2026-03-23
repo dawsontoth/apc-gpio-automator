@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { state } from './lib/core/state.js';
 import { initGPIO } from './lib/gpio/initGPIO.js';
 import { discoverDevices } from './lib/pdu/discoverDevices.js';
+import { discoverKasaDevices } from './lib/kasa/discoverKasaDevices.js';
 import { pollPDUStatus } from './lib/pdu/pollPDUStatus.js';
 import { triggerGroup } from './lib/core/triggerGroup.js';
 import { toggleGroup } from './lib/core/toggleGroup.js';
@@ -31,7 +32,7 @@ async function main() {
 
   startWebServer();
   initGPIO(triggerGroup, toggleGroup);
-  await discoverDevices();
+  await Promise.all([discoverDevices(), discoverKasaDevices()]);
 
   setInterval(() => {
     for (const host in state.discoveredPDUs) {
@@ -39,7 +40,10 @@ async function main() {
     }
   }, 60_000);
 
-  setInterval(discoverDevices, 5 * 60_000);
+  setInterval(() => {
+    discoverDevices();
+    discoverKasaDevices();
+  }, 5 * 60_000);
 
   setInterval(runSchedules, 10_000);
 }
