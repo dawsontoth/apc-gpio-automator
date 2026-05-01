@@ -349,11 +349,11 @@ window.showInfo = function (host, index) {
     html += `
             <div class="info-label">On Command</div>
             <div class="info-value">
-                <input type="text" id="edit-on-command" value="${outlet.onCommand || ''}" class="edit-input">
+                <input type="text" id="edit-on-command" value="${(outlet.onCommand || '').replace(/"/g, '&quot;')}" class="edit-input">
             </div>
             <div class="info-label">Off Command</div>
             <div class="info-value">
-                <input type="text" id="edit-off-command" value="${outlet.offCommand || ''}" class="edit-input">
+                <input type="text" id="edit-off-command" value="${(outlet.offCommand || '').replace(/"/g, '&quot;')}" class="edit-input">
             </div>
         `;
   } else {
