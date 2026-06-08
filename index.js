@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { state } from './lib/core/state.js';
+import { loadManualDeviceStates } from './lib/core/manualState.js';
 import { initGPIO } from './lib/gpio/initGPIO.js';
 import { discoverDevices } from './lib/pdu/discoverDevices.js';
 import { discoverKasaDevices } from './lib/kasa/discoverKasaDevices.js';
@@ -17,12 +18,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const config = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
 state.config = config;
 
-// Initialize manual device states
-if (config.manualDevices) {
-  config.manualDevices.forEach((d) => {
-    state.manualDeviceStates[d.name] = 'off';
-  });
-}
+// Restore manual device states persisted before the last reboot (defaults to off).
+loadManualDeviceStates();
 
 /**
  * @returns {Promise<void>}

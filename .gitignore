@@ -34,6 +34,7 @@
 /node
 /node_g
 /gon-config.json
+/manual-state.json
 /*.exe
 /*.swp
 /out
