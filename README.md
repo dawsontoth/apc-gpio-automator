@@ -19,6 +19,7 @@ A comprehensive Node.js application for controlling APC PDUs and Raspberry Pi GP
 - **Sequential Triggering**: Implements a 100ms delay between outlet activations within a group to prevent power surges.
 - **Flexible Grouping**: Outlets automatically join groups based on case-insensitive substring matching in their names.
 - **Simple Scheduler**: Time and day-based scheduling for automated power control.
+- **HTTP API**: Turn channels on or off from other systems with a single POST request that matches devices by name or regular expression (see [HTTP API](#http-api)).
 
 ## Installation
 
@@ -174,6 +175,47 @@ Once started, the web server is accessible at:
 - `http://<your-raspberry-pi-ip>:3000`
 
 The interface features a "Power Control" title which acts as a fuzzy search bar. Use it to filter by group name, outlet name, or PDU location.
+
+## HTTP API
+
+In addition to the real-time web interface, channels can be controlled with a simple, body-less HTTP request. This is convenient for automation, home-automation hubs, `curl`, or any system that can make an HTTP call.
+
+### Turn channels on/off
+
+```
+POST /action/:action/:names
+```
+
+- `:action` — `on` or `off` (case-insensitive). Any other value returns `400`.
+- `:names` — a comma-separated list of channel names. Everything is in the path; **no request body is required**.
+
+Each name is matched against device names (APC outlets, Kasa devices, GPIO outputs, and manual devices) as a **case-insensitive regular expression**. Because a plain name is itself a valid regex, it behaves like a substring match — so `Hazer` targets every device whose name contains "Hazer", exactly like the [grouping logic](#grouping-logic). Wildcards let you target several specific devices at once:
+
+```bash
+# Turn on two specific outlets by their full names
+curl -X POST "http://localhost:3000/action/on/Hazer%20Drum%20Back%20Fan,Hazer%20Drum%20Front%20Fan"
+
+# Same result using a wildcard in the middle
+curl -X POST "http://localhost:3000/action/on/Hazer%20Drum.%2B%3FFan"
+
+# Turn off everything in the "Hazer" group
+curl -X POST "http://localhost:3000/action/off/Hazer"
+```
+
+Matching a name reuses the standard group-trigger path, so per-device on/off delays, group commands, dependencies, and auto-off timers all apply just as they do from the web interface.
+
+On success the endpoint responds with `200` and the parsed request, e.g.:
+
+```json
+{ "success": true, "action": "on", "names": ["Hazer Drum Back Fan", "Hazer Drum Front Fan"] }
+```
+
+**Notes:**
+
+- **URL-encode special characters.** Spaces may be sent literally or as `%20`. Regex metacharacters that are also URL-significant must be encoded: `+` → `%2B`, `?` → `%3F`, and especially `#` → `%23` (an unencoded `#` is treated as a URL fragment and never reaches the server).
+- **Comma is the list delimiter**, so a channel name or pattern cannot contain a literal comma.
+- **Invalid regex is safe.** If a pattern fails to compile, it falls back to plain substring matching instead of erroring.
+- A name that matches no devices is not an error — the request still returns `success: true` and simply does nothing.
 
 ## License
 
