@@ -118,6 +118,13 @@ To keep the application running in the background and ensure it restarts on cras
    - **Restart**: `npm run daemon:restart`
    - **Stop**: `npm run daemon:stop`
 
+4. **After updating dependencies**:
+   If `npm run daemon:status` warns that the in-memory PM2 is out-of-date (e.g. after a PM2 upgrade), swap the running daemon for the new version. Saved processes are restored automatically:
+
+   ```bash
+   npx pm2 update
+   ```
+
 ## Configuration (`config.json`)
 
 The `config.json` file is the central point for setting up your environment.
